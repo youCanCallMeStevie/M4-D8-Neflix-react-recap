@@ -1,7 +1,50 @@
 import React, { Component } from "react";
 import Gallery from "./Gallery";
 
+import { Alert } from "react-bootstrap";
+
 class Home extends Component {
+  state = {
+    harryPotterMovies: [],
+    spiderManMovies: [],
+    starWarsMovies: [],
+    loading: true,
+    error: false,
+  };
+
+  url = "http://www.omdbapi.com/?apikey=85a2b045";
+
+  fetchMovies = () => {
+    Promise.all([
+      fetch(this.url + "&s=harry%20potter")
+        .then((response) => response.json())
+        .then((responseObject) => {
+          this.setState({ harryPotterMovies: responseObject.Search }, () =>
+            console.log(this.state.harryPotterMovies)
+          );
+        }),
+      fetch(this.url + "&s=spider%20man")
+        .then((response) => response.json())
+        .then((responseObject) =>
+          this.setState({ spiderManMovies: responseObject.Search })
+        ),
+      fetch(this.url + "&s=star%20wars")
+        .then((response) => response.json())
+        .then((responseObject) =>
+          this.setState({ starWarsMovies: responseObject.Search })
+        ),
+    ])
+      .then(() => this.setState({ loading: false }))
+      .catch((err) => {
+        this.setState({ error: true });
+        console.log("An error has occurred:", err);
+      });
+  };
+
+  componentDidMount() {
+    this.fetchMovies();
+  }
+
   render() {
     return (
       <div>
@@ -42,26 +85,44 @@ class Home extends Component {
               <i className="fa fa-th icons"></i>
             </div>
           </div>
-          {/* <Gallery title="Trending Now" imageSrc="/assets/images/1.png">
-            <div>
-              <h4>{props.title}</h4>
-              <Row className="row-cols-1 row-cols-sm-2 row-cols-lg-4 row-cols-xl-6 mb-4 no-gutters text-center">
-                <Movie imageSrc={props.imageSrc}>
-                  <Col className="mb-2">
-                    <Image
-                      className="img-fluid"
-                      src={props.imageSrc}
-                      alt="movie picture"
-                    />
-                  </Col>
-                </Movie>
-              </Row>
-            </div>
-          </Gallery> */}
-          <Gallery title="Trending Now" imageSrc="/assets/images/1.png" />
-          <Gallery title="Watch it Again" imageSrc="/assets/images/2.png" />
-          <Gallery title="New Releases" imageSrc="/assets/images/3.png" />
-          <Gallery imageSrc="/assets/images/4.png" />
+
+          {this.state.error && (
+            <Alert variant="danger" className="text-center">
+              An error has occurred, please try again later
+            </Alert>
+          )}
+
+          {!this.state.error &&
+            (this.props.searchedMovies.length > 0 ||
+              this.props.searchedLoading === true) && (
+              <Gallery
+                title="Search Results"
+                loading={this.props.searchedLoading}
+                movies={this.props.searchedMovies}
+              />
+            )}
+
+          {!this.state.error &&
+            (!this.props.searchedMovies.length > 0 ||
+              this.props.searchedLoading === null) && (
+              <>
+                <Gallery
+                  title="Spider Man"
+                  loading={this.state.loading}
+                  movies={this.state.spiderManMovies.slice(0, 6)}
+                />
+                <Gallery
+                  title="Star Wars"
+                  loading={this.state.loading}
+                  movies={this.state.starWarsMovies.slice(0, 6)}
+                />
+                <Gallery
+                  title="Harry Potter"
+                  loading={this.state.loading}
+                  movies={this.state.harryPotterMovies.slice(0, 6)}
+                />
+              </>
+            )}
         </div>
       </div>
     );

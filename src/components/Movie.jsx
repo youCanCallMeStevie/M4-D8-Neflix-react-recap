@@ -7,7 +7,7 @@ class Movie extends Component {
       <Col className="mb-2">
         <Image
           className="img-fluid"
-          src={this.props.imageSrc}
+          src={this.props.data.Poster}
           alt="movie picture"
         />
       </Col>

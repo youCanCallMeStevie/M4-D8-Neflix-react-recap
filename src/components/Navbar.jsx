@@ -1,61 +1,66 @@
-import React from "react";
+import React, { Component } from "react";
 
-export default function Navbar() {
-  return (
-    <nav className="navbar navbar-expand-lg navbar-dark">
-      <a className="navbar-brand" href="#">
-        <img
-          src="/assets/images/logo.png"
-          style={{ width: "100px", height: "55px" }}
-        />
-      </a>
-      <button
-        className="navbar-toggler"
-        type="button"
-        data-toggle="collapse"
-        data-target="#navbarSupportedContent"
-        aria-controls="navbarSupportedContent"
-        aria-expanded="false"
-        aria-label="Toggle navigation"
-      >
-        <span className="navbar-toggler-icon"></span>
-      </button>
+import { Navbar, Nav, InputGroup, FormControl } from "react-bootstrap";
 
-      <div className="collapse navbar-collapse" id="navbarSupportedContent">
-        <ul className="navbar-nav mr-auto">
-          <li className="nav-item">
-            <a className="nav-link font-weight-bold" href="#">
-              Home <span className="sr-only">(current)</span>
-            </a>
-          </li>
-          <li className="nav-item active">
-            <a className="nav-link font-weight-bold" href="#">
+class NetflixNavbar extends Component {
+  state = { searchString: "" };
+
+  searchStringHandler = (e) => {
+    if (e.keyCode === 13 || e.key === "Enter") {
+      this.props.showSearchResult(this.state.searchString);
+    } else {
+      this.setState({ searchString: e.currentTarget.value });
+    }
+  };
+
+  render() {
+    return (
+      <Navbar variant="dark" expand="lg" style={{ backgroundColor: "#221f1f" }}>
+        <Navbar.Brand href="/">
+          <img
+            src="/assets/images/logo.png"
+            alt="logo"
+            style={{ width: "100px", height: "55px" }}
+          />
+        </Navbar.Brand>
+        <Navbar.Toggle aria-controls="basic-navbar-nav" />
+        <Navbar.Collapse id="basic-navbar-nav">
+          <Nav className="mr-auto">
+            <Nav.Link className="font-weight-bold" href="/">
+              Home
+            </Nav.Link>
+            <Nav.Link active className="font-weight-bold" href="/">
               TV Shows
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link font-weight-bold" href="#">
+            </Nav.Link>
+            <Nav.Link className="font-weight-bold" href="/">
               Movies
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link font-weight-bold" href="#">
+            </Nav.Link>
+            <Nav.Link className="font-weight-bold" href="/">
               Recently Added
-            </a>
-          </li>
-          <li className="nav-item">
-            <a className="nav-link font-weight-bold" href="#">
+            </Nav.Link>
+            <Nav.Link className="font-weight-bold" href="/">
               My List
-            </a>
-          </li>
-        </ul>
-        <div className="d-flex my-3 my-lg-0">
-          <i className="fa fa-search icons mr-3"></i>
-          <div id="kids">KIDS</div>
-          <i className="fa fa-bell icons mx-3"></i>
-          <i className="fa fa-user icons mx-3"></i>
-        </div>
-      </div>
-    </nav>
-  );
+            </Nav.Link>
+          </Nav>
+          <span className="d-none d-md-flex align-items-center">
+            <InputGroup className="icons">
+              <FormControl
+                className="mr-3"
+                placeholder="Search and press enter"
+                aria-label="search"
+                aria-describedby="basic-addon1"
+                onKeyDown={this.searchStringHandler}
+                onChange={this.searchStringHandler}
+                value={this.state.searchString}
+              />
+            </InputGroup>
+            <div id="kids mr-2">KIDS</div>
+            <i className="fa fa-bell icons mr-2"></i>
+            <i className="fa fa-user icons mr-2"></i>
+          </span>
+        </Navbar.Collapse>
+      </Navbar>
+    );
+  }
 }
+export default NetflixNavbar;
