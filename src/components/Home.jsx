@@ -1,16 +1,18 @@
 import React, { Component } from "react";
 import Gallery from "./Gallery";
-import {Alert} from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 
 class Home extends Component {
   state = {
     harryPotterMovies: [],
     spiderManMovies: [],
     starWarsMovies: [],
+
     error: false,
     loading: true,
   };
   url = "http://www.omdbapi.com/?apikey=1bee4676";
+
 
   fetchMovies = () => {
     Promise.all([
