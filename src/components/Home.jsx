@@ -1,41 +1,45 @@
 import React, { Component } from "react";
 import Gallery from "./Gallery";
 import { Alert } from "react-bootstrap";
+import CommentListWithFetch from "./CommentListWithFetch";
 
 class Home extends Component {
   state = {
     harryPotterMovies: [],
     spiderManMovies: [],
     starWarsMovies: [],
-
+    selectedMovieId: null,
     error: false,
     loading: true,
   };
   url = "http://www.omdbapi.com/?apikey=1bee4676";
 
+  handleSelectedMovie =(imdbID) => {
+    this.setState({selectedMovieId: imdbID})
+  }
 
   fetchMovies = () => {
     Promise.all([
       fetch(this.url + "&s=harry%20potter")
-        .then((response) => response.json())
-        .then((responseObject) => {
+        .then(response => response.json())
+        .then(responseObject => {
           this.setState({ harryPotterMovies: responseObject.Search }, () =>
             console.log(this.state.harryPotterMovies)
           );
         }),
       fetch(this.url + "&s=spider%20man")
-        .then((response) => response.json())
-        .then((responseObject) =>
+        .then(response => response.json())
+        .then(responseObject =>
           this.setState({ spiderManMovies: responseObject.Search })
         ),
       fetch(this.url + "&s=star%20wars")
-        .then((response) => response.json())
-        .then((responseObject) =>
+        .then(response => response.json())
+        .then(responseObject =>
           this.setState({ starWarsMovies: responseObject.Search })
         ),
     ])
       .then(() => this.setState({ loading: false }))
-      .catch((err) => {
+      .catch(err => {
         this.setState({ error: true });
         console.log("An error has occurred:", err);
       });
@@ -85,7 +89,9 @@ class Home extends Component {
               <i className="fa fa-th icons"></i>
             </div>
           </div>
-
+          {this.state.selectedMovieId && (
+            <CommentListWithFetch imdbID={this.state.selectedMovieId} />
+          )}
           {this.state.error && (
             <Alert variant="danger" className="text-center">
               An error has occurred, please try again later
@@ -99,6 +105,7 @@ class Home extends Component {
                 title="Search Results"
                 loading={this.props.searchedLoading}
                 movies={this.props.searchedMovies}
+                selectedMovieID={this.handleSelectedMovie}
               />
             )}
 
@@ -110,16 +117,23 @@ class Home extends Component {
                   title="Spider Man"
                   loading={this.state.loading}
                   movies={this.state.spiderManMovies.slice(0, 6)}
+                  selectedMovieID={this.handleSelectedMovie}
+
+
                 />
                 <Gallery
                   title="Star Wars"
                   loading={this.state.loading}
                   movies={this.state.starWarsMovies.slice(0, 6)}
+                  selectedMovieID={this.handleSelectedMovie}
+
                 />
                 <Gallery
                   title="Harry Potter"
                   loading={this.state.loading}
                   movies={this.state.harryPotterMovies.slice(0, 6)}
+                  selectedMovieID={this.handleSelectedMovie}
+
                 />
               </>
             )}

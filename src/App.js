@@ -11,7 +11,7 @@ class App extends React.Component {
   showSearchResult = (searchString) => {
     this.setState({ searchedLoading: true });
 
-    fetch(`http://www.omdbapi.com/?apikey=85a2b045&s=${searchString}`)
+    fetch(`http://www.omdbapi.com/?apikey=1bee4676&s=${searchString}`)
       .then((response) => response.json())
       .then((responseObject) => {
         console.log(responseObject);
