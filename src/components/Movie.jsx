@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { Col, Image } from "react-bootstrap";
+import { withRouter } from "react-router-dom"
 
 class Movie extends Component {
   render() {
@@ -9,7 +10,7 @@ class Movie extends Component {
           className="img-fluid"
           src={this.props.data.Poster}
           alt="movie picture"
-          onClick={() => this.props.selectedMovieID(this.props.data.imdbID)}
+          onClick={() => this.props.history.push(`/details/${this.props.data.imdbID}`)}
 
         />
       </Col>
@@ -17,4 +18,4 @@ class Movie extends Component {
   }
 }
 
-export default Movie;
+export default withRouter(Movie);

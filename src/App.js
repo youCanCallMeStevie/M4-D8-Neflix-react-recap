@@ -1,9 +1,12 @@
 import React from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
-import NetflixNavbar from "./components/Navbar";
+import Navbar from "./components/Navbar";
 import Home from "./components/Home";
+import Details from "./components/Details";
 import Footer from "./components/Footer";
+
+import { BrowserRouter as Router, Route } from "react-router-dom";
 
 class App extends React.Component {
   state = { searchedMovies: [], searchedLoading: null };
@@ -11,10 +14,9 @@ class App extends React.Component {
   showSearchResult = (searchString) => {
     this.setState({ searchedLoading: true });
 
-    fetch(`http://www.omdbapi.com/?apikey=1bee4676&s=${searchString}`)
+    fetch(`http://www.omdbapi.com/?apikey=85a2b045&s=${searchString}`)
       .then((response) => response.json())
       .then((responseObject) => {
-        console.log(responseObject);
         if (responseObject.Response === "True") {
           this.setState({
             searchedMovies: responseObject.Search,
@@ -30,12 +32,28 @@ class App extends React.Component {
   render() {
     return (
       <div className="App">
-        <NetflixNavbar showSearchResult={this.showSearchResult} />
-        <Home
-          searchedMovies={this.state.searchedMovies}
-          searchedLoading={this.state.searchedLoading}
-        />
-        <Footer />
+        <Router>
+          <Navbar showSearchResult={this.showSearchResult} />
+          {/* <Home
+            searchedMovies={this.state.searchedMovies}
+            searchedLoading={this.state.searchedLoading}
+          /> */}
+
+          <Route
+            path="/"
+            exact
+            render={(props) => (
+              <Home
+                {...props}
+                searchedMovies={this.state.searchedMovies}
+                searchedLoading={this.state.searchedLoading}
+              />
+            )}
+          />
+          <Route path="/details" exact component={Details} />
+          <Route path="/details/:imdbID" component={Details} />
+          <Footer />
+        </Router>
       </div>
     );
   }

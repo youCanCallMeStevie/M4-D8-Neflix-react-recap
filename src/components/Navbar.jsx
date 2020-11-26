@@ -1,11 +1,12 @@
 import React, { Component } from "react";
 
 import { Navbar, Nav, InputGroup, FormControl } from "react-bootstrap";
+import { withRouter } from "react-router-dom";
 
 class NetflixNavbar extends Component {
   state = { searchString: "" };
 
-  searchStringHandler = (e) => {
+  searchStringHandler = e => {
     if (e.keyCode === 13 || e.key === "Enter") {
       this.props.showSearchResult(this.state.searchString);
     } else {
@@ -29,7 +30,7 @@ class NetflixNavbar extends Component {
             <Nav.Link className="font-weight-bold" href="/">
               Home
             </Nav.Link>
-            <Nav.Link active className="font-weight-bold" href="/">
+            <Nav.Link active={this.props.location.pathname === "/details" ? true : false} className="font-weight-bold" href="/">
               TV Shows
             </Nav.Link>
             <Nav.Link className="font-weight-bold" href="/">
@@ -63,4 +64,4 @@ class NetflixNavbar extends Component {
     );
   }
 }
-export default NetflixNavbar;
+export default withRouter(NetflixNavbar);
